@@ -1,0 +1,47 @@
+//Using TokBox to connect to a particular session, and subscribe to a video stream, using WebRTC
+
+// Initialize API key, session, and token...
+// Sessions and tokens are generated on the server and passed down to the client
+<script src='https://swww.tokbox.com/webrtc/v2.0/js/TB.min.js'></script>
+<div id="myPublisherDiv"></div>
+        <script type="text/javascript">
+var apiKey = "";
+var sessionId = "2_MX4yNTkyNTM1Mn4xMjcuMC4wLjF-V2VkIE1heSAyOSAxNzoxMjozNyBQRFQgMjAxM34wLjk0MjQ2NjQ0fg";
+var token = "T1==cGFydG5lcl9pZD0yNTkyNTM1MiZzZGtfdmVyc2lvbj10YnJ1YnktdGJyYi12MC45MS4yMDExLTAyLTE3JnNpZz00YTNjYjk5ZThhOGVhNTMxOWMyYmY3NzQzNmM5MmRmNTgzNDIyNzc2OnJvbGU9cHVibGlzaGVyJnNlc3Npb25faWQ9Ml9NWDR5TlRreU5UTTFNbjR4TWpjdU1DNHdMakYtVjJWa0lFMWhlU0F5T1NBeE56b3hNam96TnlCUVJGUWdNakF4TTM0d0xqazBNalEyTmpRMGZnJmNyZWF0ZV90aW1lPTEzNjk4NzI3NjAmbm9uY2U9MC42MDQ5NzIyNjY5NDExNDA4JmV4cGlyZV90aW1lPTEzNzI0NjQ3NjUmY29ubmVjdGlvbl9kYXRhPQ==";
+
+var session = TB.initSession(sessionId);
+          session.addEventListener('sessionConnected', sessionConnectedHandler);
+          session.connect(apiKey, token);
+          
+          function sessionConnectedHandler(event) {
+            var publisher = TB.initPublisher(apiKey, 'myPublisherDiv');
+            session.publish(publisher);
+          
+        
+        
+  // Subscribes to streams that are already in the session when connected
+  subscribeToStreams(event.streams);
+          }
+
+function streamCreatedHandler(event) {
+  // Subscribes to any new streams that are created
+  subscribeToStreams(event.streams);
+}
+
+function subscribeToStreams(streams) {
+  for (var i = 0; i < streams.length; i++) {
+    // To ensure we don't connect to ourselves
+    if (streams[i].connection.connectionId == session.connection.connectionId) {
+      return;
+    }
+
+  
+    var div = document.createElement('div');
+    div.setAttribute('id', 'stream' + streams[i].streamId);
+    document.body.appendChild(div);
+
+    // Subscribe to the stream
+    session.subscribe(streams[i], div.id);
+  }
+}
+</script>
