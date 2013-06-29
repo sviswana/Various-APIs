@@ -1,0 +1,63 @@
+<!--Using Aviary API to return the image dimensions of an image, and to copy the output into the text box in the image. Employs getAction
+to return the list of methods used.-->
+
+<!-- Load Feather code -->
+<script type="text/javascript" src="http://feather.aviary.com/js/feather.js"></script>
+
+<!-- Instantiate Feather -->
+<script type='text/javascript'>
+   var featherEditor = new Aviary.Feather({
+      image: 'image1',
+       apiKey: 'im8jnwnhe5qj5tnc',
+       apiVersion: 2,
+       tools: 'text,effects,resize',
+       url: 'https://s3.amazonaws.com/hr-filepicker/Chris.png',
+       appendTo: '',
+       displayImageSize: true,
+       onSave: function(imageID, newURL) {
+            
+            var imd = featherEditor.getImageDimensions();
+            alert(JSON.stringify(featherEditor.getImageDimensions()));
+            //alert(featherEditor.getActionList());
+            alert(JSON.stringify(featherEditor.getActionList()));
+           var img = document.getElementById(imageID);
+           img.src = newURL;
+           alert("finished");
+       },
+       onError: function(errorObj) {
+           alert(errorObj.message);
+       }
+   });
+
+   function launchEditor(id, src) {
+      
+       featherEditor.launch(
+             id, src
+      /*{
+           image: image1,
+           url: 'https://s3.amazonaws.com/hr-filepicker/Chris.png'
+       }*/);   
+      featherEditor.close();
+      return false;
+   }
+
+ function myAction(id, src) {
+      
+   alert(featherEditor.getActionList());
+
+ }
+   
+</script>
+
+<div id='injection_site'></div>
+
+<img id='image1' src='https://s3.amazonaws.com/hr-filepicker/Chris.png'/>
+
+<!-- Add an edit button, passing the HTML id of the image and the public URL of the image -->
+<p><input type='image' src='http://images.aviary.com/images/edit-photo.png' value='Edit photo'
+          onclick="return launchEditor('image1', 'https://s3.amazonaws.com/hr-filepicker/Chris.png');" /></p>
+
+<p><input type='image' src='http://images.aviary.com/images/edit-photo.png' value='Edit photo'
+          onclick="return myAction('image1', 'https://s3.amazonaws.com/hr-filepicker/Chris.png');" /></p>
+
+
